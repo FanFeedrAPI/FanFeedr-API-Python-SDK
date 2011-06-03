@@ -1,0 +1,75 @@
+﻿FanFeedr API Python SDK
+
+
+This is a simple wrapper for accessing the FanFeedr API provider you have registered for a key at http://developer.fanfeedr.com.  To utilize this SDK you will need to have access to two pieces of data:
+
+
+1. Your API key
+2. The name of the tier you are signed up (basic, bronze, silver, gold)
+
+
+How to use
+
+
+Here are a few easy to use use cases for how to use the FanFeedr API Python SDK
+
+
+First, to get detailed information for all teams in the MLB.
+
+
+------
+from fanfeedr import FanFeedrAPI
+
+
+ffapi = FanFeedrAPI("your-key", tier="your-tier") #Default basic.
+leagues = ffapi.get_collection("leagues")
+mlb = None
+for league in leagues:
+    if league["name"] == "MLB":
+        mlb = league
+        break
+conferences = ffapi.get_collection("conferences", ptype="leagues", puid=mlb["id"])
+lmerge = lambda x, y: x+y
+divisions = reduce(lmerge, [ffapi.get_collection("divisions",
+       ptype="conferences",
+       puid=conference["id"]) for conference in conferences])
+teams = reduce(lmerge, [ffapi.get_collection("teams", ptype="divisions", puid=division["id"])
+     for division in divisions])
+teams = map(lambda x: ffapi.get_resource("teams", x["id"]), teams)
+print teams
+-------
+
+
+Second, get the hottest news for the Red Sox (using the team data from above)
+-----
+from fanfeedr import FanFeedrAPI
+red_sox = None
+for team in teams:
+    if team["name"] == "Boston Red Sox":
+        red_sox = team
+        break
+articles = sorted(ffapi.get_collection("content", ptype="teams", puid=red_sox["id"]),
+                  key=lambda x: x["hotness"],
+                  reverse=True)
+#Get full info for top 10
+articles = [ffapi.get_resource("content", article["id"]) for article in articles[:10]]
+print articles
+-----
+
+
+Last, get the next games (in two weeks) for the Red Sox (using the team data from the first example
+
+
+-----
+
+
+from fanfeedr import FanFeedrAPI
+ffapi = FanFeedrAPI("your-key", tier="your-tier")
+red_sox = None
+for team in teams:
+    if team["name"] == "Boston Red Sox":
+        red_sox = team
+        break
+events = ffapi.get_collection_method("next", "events", ptype="teams", puid=red_sox["id"])
+events = [ffapi.get_resource("events", event["id"]) for event in events]
+print events
