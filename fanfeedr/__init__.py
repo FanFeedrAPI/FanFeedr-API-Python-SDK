@@ -1,0 +1,1 @@
+from fanfeedr import FanFeedrAPI
