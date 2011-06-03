@@ -8,8 +8,17 @@ This is a simple wrapper for accessing the FanFeedr API provider you have regist
 2. The name of the tier you are signed up (basic, bronze, silver, gold)
 
 
-How to use
+Installation
+----------
 
+Installation is run through setuptools and setup.py.  To install this module simply run the command:
+
+python setup.py install
+
+in the base directory
+
+How to use
+----------
 
 Here are a few easy to use use cases for how to use the FanFeedr API Python SDK
 
@@ -39,8 +48,8 @@ teams = map(lambda x: ffapi.get_resource("teams", x["id"]), teams)
 print teams
 -------
 
-
 Second, get the hottest news for the Red Sox (using the team data from above)
+
 -----
 from fanfeedr import FanFeedrAPI
 red_sox = None
@@ -56,9 +65,7 @@ articles = [ffapi.get_resource("content", article["id"]) for article in articles
 print articles
 -----
 
-
 Last, get the next games (in two weeks) for the Red Sox (using the team data from the first example
-
 
 -----
 
