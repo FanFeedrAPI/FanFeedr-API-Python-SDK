@@ -60,7 +60,6 @@ class FanFeedrAPI(object):
         http://
         """
         url = "http://%s/api/%s?api_key=%s" % (self.FANFEEDR_BASE, path, self.FANFEEDR_KEY)
-        print url
         f = urllib.urlopen(url)
         if f.getcode() == 404:
             raise FanFeedrNotFoundException()
