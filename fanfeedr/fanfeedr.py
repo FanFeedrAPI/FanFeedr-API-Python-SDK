@@ -1,5 +1,7 @@
 import urllib, re, time, simplejson as json
 
+import defaults
+
 class FanFeedrException(Exception):
     """
     Generic exception for the FanFeedr API
@@ -38,9 +40,9 @@ class FanFeedrAPI(object):
     Wrapper for the FanFeedr REST API v1.
     Documentation available at http://developer.fanfeedr.com/
     """
-    FANFEEDR_BASE = "ffapi.fanfeedr.com/%s"
 
-    def __init__(self, fanfeedr_key, tier="basic"):
+    def __init__(self, fanfeedr_key, tier=defaults.TIER,
+                 base_url=defaults.FANFEEDR_BASE):
         """
         Initialize setup for requests made to the
         Fanfeedr API
@@ -48,7 +50,7 @@ class FanFeedrAPI(object):
         tier is one of basic|bronze|silver|gold depending on
         your key
         """
-        self.FANFEEDR_BASE = self.FANFEEDR_BASE % tier
+        self.FANFEEDR_BASE = base_url + tier
         self.FANFEEDR_KEY = fanfeedr_key
 
     def _make_request(self, path, request_number=1):
